@@ -14,8 +14,20 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
-});
 
+
+Route::group(['middleware' => ['auth:api']], function () {
+    Route::get('/verify','Api\AuthController@verify');
+   
+Route::resource('roles', 'Api\RoleController');
+
+// Users CRUD
+Route::resource('users', 'UserController');
+Route::post('email/verify', 'UserController@verifyEmail');
+Route::post('users/delete', 'UserController@deleteAll');
+Route::post('roles/delete', 'RoleController@deleteAll');
+Route::post('user/role', 'UserController@changeRole');
+Route::post('user/photo', 'UserController@changePhoto');
+
+});
 Route::post('/login','Api\AuthController@getUser');

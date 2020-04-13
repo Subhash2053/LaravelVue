@@ -17,9 +17,9 @@ class AuthController extends Controller
         if (Auth::attempt(['email' => $email, 'password' => $password]))
         {
             $get_user = Auth::user();
-            $token = Hash::make($password);
-            $get_user->api_token = $token;
-            $get_user->save();
+            $token  =  $get_user->createToken('authToken')->accessToken;
+           // $get_user->api_token = $token;
+            //$get_user->save();
 
             //return $token;
             //$accessToken =  $get_user->createToken('authToken')->accessToken;     
@@ -36,5 +36,11 @@ class AuthController extends Controller
             ],403);
         }
 
+    }
+
+
+    public function verify(Request $request)
+    {
+        return $request->user()->only('name','email');
     }
 }
